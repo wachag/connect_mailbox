@@ -1,0 +1,10 @@
+
+
+OPTION psf_version = 2.1;
+
+BEGIN DRIVER connect_mailbox
+	OPTION supported_peripherals = (connect_mailbox);
+	OPTION copyfiles = all;
+	OPTION VERSION = 1.0;
+	OPTION NAME = connect_mailbox;
+END DRIVER
