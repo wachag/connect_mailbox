@@ -1,8 +1,8 @@
 
 `timescale 1 ns / 1 ps
 
-	module connect_mailbox_v1_0_S00_AXI #
-	(
+module connect_mailbox_v1_0_S00_AXI #
+		(
 		// Users to add parameters here
 		parameter integer C_FLIT_WIDTH = 39,
 
@@ -13,8 +13,8 @@
 		parameter integer C_S_AXI_DATA_WIDTH	= 32,
 		// Width of S_AXI address bus
 		parameter integer C_S_AXI_ADDR_WIDTH	= 4
-	)
-	(
+		)
+		(
 		// Users to add ports here
 		
 		// BRAM interface
@@ -27,16 +27,16 @@
 		output wire [3:0] bram_we_a,
 
 		// CONNECT interface: send flit
-  		output  wire [C_FLIT_WIDTH-1: 0] send_ports_putFlit_flit_in,
-  		output  wire EN_send_ports_putFlit,
-  		output  EN_send_ports_getNonFullVCs,
-  		input [1 : 0] send_ports_getNonFullVCs,
+		output  wire [C_FLIT_WIDTH-1: 0] send_ports_putFlit_flit_in,
+		output  wire EN_send_ports_putFlit,
+		output  EN_send_ports_getNonFullVCs,
+		input [1 : 0] send_ports_getNonFullVCs,
 		
 		// CONNECT interface: receive flit
-  		output  EN_recv_ports_getFlit,
-  		input [C_FLIT_WIDTH-1 : 0] recv_ports_getFlit,
-  		output  [1 : 0] recv_ports_putNonFullVCs_nonFullVCs,
-  		output  EN_recv_ports_putNonFullVCs,
+		output  EN_recv_ports_getFlit,
+		input [C_FLIT_WIDTH-1 : 0] recv_ports_getFlit,
+		output  [1 : 0] recv_ports_putNonFullVCs_nonFullVCs,
+		output  EN_recv_ports_putNonFullVCs,
 		
 		// User ports ends
 		// Do not modify the ports beyond this line
@@ -48,60 +48,60 @@
 		// Write address (issued by master, acceped by Slave)
 		input wire [C_S_AXI_ADDR_WIDTH-1 : 0] S_AXI_AWADDR,
 		// Write channel Protection type. This signal indicates the
-    		// privilege and security level of the transaction, and whether
-    		// the transaction is a data access or an instruction access.
+		// privilege and security level of the transaction, and whether
+		// the transaction is a data access or an instruction access.
 		input wire [2 : 0] S_AXI_AWPROT,
 		// Write address valid. This signal indicates that the master signaling
-    		// valid write address and control information.
+		// valid write address and control information.
 		input wire  S_AXI_AWVALID,
 		// Write address ready. This signal indicates that the slave is ready
-    		// to accept an address and associated control signals.
+		// to accept an address and associated control signals.
 		output wire  S_AXI_AWREADY,
 		// Write data (issued by master, acceped by Slave) 
 		input wire [C_S_AXI_DATA_WIDTH-1 : 0] S_AXI_WDATA,
 		// Write strobes. This signal indicates which byte lanes hold
-    		// valid data. There is one write strobe bit for each eight
-    		// bits of the write data bus.    
+		// valid data. There is one write strobe bit for each eight
+		// bits of the write data bus.    
 		input wire [(C_S_AXI_DATA_WIDTH/8)-1 : 0] S_AXI_WSTRB,
 		// Write valid. This signal indicates that valid write
-    		// data and strobes are available.
+		// data and strobes are available.
 		input wire  S_AXI_WVALID,
 		// Write ready. This signal indicates that the slave
-    		// can accept the write data.
+		// can accept the write data.
 		output wire  S_AXI_WREADY,
 		// Write response. This signal indicates the status
-    		// of the write transaction.
+		// of the write transaction.
 		output wire [1 : 0] S_AXI_BRESP,
 		// Write response valid. This signal indicates that the channel
-    		// is signaling a valid write response.
+		// is signaling a valid write response.
 		output wire  S_AXI_BVALID,
 		// Response ready. This signal indicates that the master
-    		// can accept a write response.
+		// can accept a write response.
 		input wire  S_AXI_BREADY,
 		// Read address (issued by master, acceped by Slave)
 		input wire [C_S_AXI_ADDR_WIDTH-1 : 0] S_AXI_ARADDR,
 		// Protection type. This signal indicates the privilege
-    		// and security level of the transaction, and whether the
-    		// transaction is a data access or an instruction access.
+		// and security level of the transaction, and whether the
+		// transaction is a data access or an instruction access.
 		input wire [2 : 0] S_AXI_ARPROT,
 		// Read address valid. This signal indicates that the channel
-    		// is signaling valid read address and control information.
+		// is signaling valid read address and control information.
 		input wire  S_AXI_ARVALID,
 		// Read address ready. This signal indicates that the slave is
-    		// ready to accept an address and associated control signals.
+		// ready to accept an address and associated control signals.
 		output wire  S_AXI_ARREADY,
 		// Read data (issued by slave)
 		output wire [C_S_AXI_DATA_WIDTH-1 : 0] S_AXI_RDATA,
 		// Read response. This signal indicates the status of the
-    		// read transfer.
+		// read transfer.
 		output wire [1 : 0] S_AXI_RRESP,
 		// Read valid. This signal indicates that the channel is
-    		// signaling the required read data.
+		// signaling the required read data.
 		output wire  S_AXI_RVALID,
 		// Read ready. This signal indicates that the master can
-    		// accept the read data and response information.
+		// accept the read data and response information.
 		input wire  S_AXI_RREADY
-	);
+		);
 
 	// AXI4LITE signals
 	reg [C_S_AXI_ADDR_WIDTH-1 : 0] 	axi_awaddr;
@@ -127,9 +127,9 @@
 	//------------------------------------------------
 	//-- Number of Slave Registers 4
 	reg [C_S_AXI_DATA_WIDTH-1:0]	control_reg;
-	reg [C_S_AXI_DATA_WIDTH-1:0]	message_address;
-	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg2;
-	reg [C_S_AXI_DATA_WIDTH-1:0]	slv_reg3;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	send_message_address;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	status_reg;
+	reg [C_S_AXI_DATA_WIDTH-1:0]	recv_message_address;
 	wire	 slv_reg_rden;
 	wire	 slv_reg_wren;
 	reg [C_S_AXI_DATA_WIDTH-1:0]	 reg_data_out;
@@ -152,25 +152,25 @@
 
 	always @( posedge S_AXI_ACLK )
 	begin
-	  if ( S_AXI_ARESETN == 1'b0 )
-	    begin
-	      axi_awready <= 1'b0;
-	    end 
-	  else
-	    begin    
-	      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID)
-	        begin
-	          // slave is ready to accept write address when 
-	          // there is a valid write address and write data
-	          // on the write address and data bus. This design 
-	          // expects no outstanding transactions. 
-	          axi_awready <= 1'b1;
-	        end
-	      else           
-	        begin
-	          axi_awready <= 1'b0;
-	        end
-	    end 
+		if ( S_AXI_ARESETN == 1'b0 )
+		begin
+			axi_awready <= 1'b0;
+		end 
+		else
+		begin    
+			if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID)
+			begin
+				// slave is ready to accept write address when 
+				// there is a valid write address and write data
+				// on the write address and data bus. This design 
+				// expects no outstanding transactions. 
+				axi_awready <= 1'b1;
+			end
+			else           
+			begin
+				axi_awready <= 1'b0;
+			end
+		end 
 	end       
 
 	// Implement axi_awaddr latching
@@ -179,18 +179,18 @@
 
 	always @( posedge S_AXI_ACLK )
 	begin
-	  if ( S_AXI_ARESETN == 1'b0 )
-	    begin
-	      axi_awaddr <= 0;
-	    end 
-	  else
-	    begin    
-	      if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID)
-	        begin
-	          // Write Address latching 
-	          axi_awaddr <= S_AXI_AWADDR;
-	        end
-	    end 
+		if ( S_AXI_ARESETN == 1'b0 )
+		begin
+			axi_awaddr <= 0;
+		end 
+		else
+		begin    
+			if (~axi_awready && S_AXI_AWVALID && S_AXI_WVALID)
+			begin
+				// Write Address latching 
+				axi_awaddr <= S_AXI_AWADDR;
+			end
+		end 
 	end       
 
 	// Implement axi_wready generation
@@ -200,25 +200,25 @@
 
 	always @( posedge S_AXI_ACLK )
 	begin
-	  if ( S_AXI_ARESETN == 1'b0 )
-	    begin
-	      axi_wready <= 1'b0;
-	    end 
-	  else
-	    begin    
-	      if (~axi_wready && S_AXI_WVALID && S_AXI_AWVALID)
-	        begin
-	          // slave is ready to accept write data when 
-	          // there is a valid write address and write data
-	          // on the write address and data bus. This design 
-	          // expects no outstanding transactions. 
-	          axi_wready <= 1'b1;
-	        end
-	      else
-	        begin
-	          axi_wready <= 1'b0;
-	        end
-	    end 
+		if ( S_AXI_ARESETN == 1'b0 )
+		begin
+			axi_wready <= 1'b0;
+		end 
+		else
+		begin    
+			if (~axi_wready && S_AXI_WVALID && S_AXI_AWVALID)
+			begin
+				// slave is ready to accept write data when 
+				// there is a valid write address and write data
+				// on the write address and data bus. This design 
+				// expects no outstanding transactions. 
+				axi_wready <= 1'b1;
+			end
+			else
+			begin
+				axi_wready <= 1'b0;
+			end
+		end 
 	end       
 
 	// Implement memory mapped register select and write logic generation
@@ -232,54 +232,54 @@
 
 	always @( posedge S_AXI_ACLK )
 	begin
-	  if ( S_AXI_ARESETN == 1'b0 )
-	    begin
-	      control_reg <= 0;
-	      message_address <= 0;
-	      slv_reg2 <= 0;
-	      slv_reg3 <= 0;
-	    end 
-	  else begin
-	    if (slv_reg_wren)
-	      begin
-	        case ( axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
-	          2'h0:
-	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
-	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
-	                // Respective byte enables are asserted as per write strobes 
-	                // Slave register 0
-	                control_reg[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
-	              end  
-	          2'h1:
-	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
-	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
-	                // Respective byte enables are asserted as per write strobes 
-	                // Slave register 1
-	                message_address[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
-	              end  
-	          2'h2:
-	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
-	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
-	                // Respective byte enables are asserted as per write strobes 
-	                // Slave register 2
-	                slv_reg2[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
-	              end  
-	          2'h3:
-	            for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
-	              if ( S_AXI_WSTRB[byte_index] == 1 ) begin
-	                // Respective byte enables are asserted as per write strobes 
-	                // Slave register 3
-	                slv_reg3[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
-	              end  
-	          default : begin
-	                      control_reg <= control_reg;
-	                      message_address <= message_address;
-	                      slv_reg2 <= slv_reg2;
-	                      slv_reg3 <= slv_reg3;
-	                    end
-	        endcase
-	      end
-	  end
+		if ( S_AXI_ARESETN == 1'b0 )
+		begin
+			control_reg <= 0;
+			send_message_address <= 0;
+			status_reg <= 0;
+			recv_message_address <= 0;
+		end 
+		else begin
+			if (slv_reg_wren)
+			begin
+				case ( axi_awaddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
+					2'h0:
+						for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+							if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+								// Respective byte enables are asserted as per write strobes 
+								// Slave register 0
+								control_reg[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+							end  
+					2'h1:
+						for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+							if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+								// Respective byte enables are asserted as per write strobes 
+								// Slave register 1
+								send_message_address[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+							end  
+					2'h2:
+						for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+							if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+								// Respective byte enables are asserted as per write strobes 
+								// Slave register 2
+								status_reg[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+							end  
+					2'h3:
+						for ( byte_index = 0; byte_index <= (C_S_AXI_DATA_WIDTH/8)-1; byte_index = byte_index+1 )
+							if ( S_AXI_WSTRB[byte_index] == 1 ) begin
+								// Respective byte enables are asserted as per write strobes 
+								// Slave register 3
+								recv_message_address[(byte_index*8) +: 8] <= S_AXI_WDATA[(byte_index*8) +: 8];
+							end  
+					default : begin
+						control_reg <= control_reg;
+						send_message_address <= send_message_address;
+						status_reg <= status_reg;
+						recv_message_address <= recv_message_address;
+					end
+				endcase
+			end
+		end
 	end    
 
 	// Implement write response logic generation
@@ -290,29 +290,29 @@
 
 	always @( posedge S_AXI_ACLK )
 	begin
-	  if ( S_AXI_ARESETN == 1'b0 )
-	    begin
-	      axi_bvalid  <= 0;
-	      axi_bresp   <= 2'b0;
-	    end 
-	  else
-	    begin    
-	      if (axi_awready && S_AXI_AWVALID && ~axi_bvalid && axi_wready && S_AXI_WVALID)
-	        begin
-	          // indicates a valid write response is available
-	          axi_bvalid <= 1'b1;
-	          axi_bresp  <= 2'b0; // 'OKAY' response 
-	        end                   // work error responses in future
-	      else
-	        begin
-	          if (S_AXI_BREADY && axi_bvalid) 
-	            //check if bready is asserted while bvalid is high) 
-	            //(there is a possibility that bready is always asserted high)   
-	            begin
-	              axi_bvalid <= 1'b0; 
-	            end  
-	        end
-	    end
+		if ( S_AXI_ARESETN == 1'b0 )
+		begin
+			axi_bvalid  <= 0;
+			axi_bresp   <= 2'b0;
+		end 
+		else
+		begin    
+			if (axi_awready && S_AXI_AWVALID && ~axi_bvalid && axi_wready && S_AXI_WVALID)
+			begin
+				// indicates a valid write response is available
+				axi_bvalid <= 1'b1;
+				axi_bresp  <= 2'b0; // 'OKAY' response 
+			end                   // work error responses in future
+			else
+			begin
+				if (S_AXI_BREADY && axi_bvalid) 
+					//check if bready is asserted while bvalid is high) 
+					//(there is a possibility that bready is always asserted high)   
+				begin
+					axi_bvalid <= 1'b0; 
+				end  
+			end
+		end
 	end   
 
 	// Implement axi_arready generation
@@ -324,25 +324,25 @@
 
 	always @( posedge S_AXI_ACLK )
 	begin
-	  if ( S_AXI_ARESETN == 1'b0 )
-	    begin
-	      axi_arready <= 1'b0;
-	      axi_araddr  <= 32'b0;
-	    end 
-	  else
-	    begin    
-	      if (~axi_arready && S_AXI_ARVALID)
-	        begin
-	          // indicates that the slave has acceped the valid read address
-	          axi_arready <= 1'b1;
-	          // Read address latching
-	          axi_araddr  <= S_AXI_ARADDR;
-	        end
-	      else
-	        begin
-	          axi_arready <= 1'b0;
-	        end
-	    end 
+		if ( S_AXI_ARESETN == 1'b0 )
+		begin
+			axi_arready <= 1'b0;
+			axi_araddr  <= 32'b0;
+		end 
+		else
+		begin    
+			if (~axi_arready && S_AXI_ARVALID)
+			begin
+				// indicates that the slave has acceped the valid read address
+				axi_arready <= 1'b1;
+				// Read address latching
+				axi_araddr  <= S_AXI_ARADDR;
+			end
+			else
+			begin
+				axi_arready <= 1'b0;
+			end
+		end 
 	end       
 
 	// Implement axi_arvalid generation
@@ -355,25 +355,25 @@
 	// cleared to zero on reset (active low).  
 	always @( posedge S_AXI_ACLK )
 	begin
-	  if ( S_AXI_ARESETN == 1'b0 )
-	    begin
-	      axi_rvalid <= 0;
-	      axi_rresp  <= 0;
-	    end 
-	  else
-	    begin    
-	      if (axi_arready && S_AXI_ARVALID && ~axi_rvalid)
-	        begin
-	          // Valid read data is available at the read data bus
-	          axi_rvalid <= 1'b1;
-	          axi_rresp  <= 2'b0; // 'OKAY' response
-	        end   
-	      else if (axi_rvalid && S_AXI_RREADY)
-	        begin
-	          // Read data is accepted by the master
-	          axi_rvalid <= 1'b0;
-	        end                
-	    end
+		if ( S_AXI_ARESETN == 1'b0 )
+		begin
+			axi_rvalid <= 0;
+			axi_rresp  <= 0;
+		end 
+		else
+		begin    
+			if (axi_arready && S_AXI_ARVALID && ~axi_rvalid)
+			begin
+				// Valid read data is available at the read data bus
+				axi_rvalid <= 1'b1;
+				axi_rresp  <= 2'b0; // 'OKAY' response
+			end   
+			else if (axi_rvalid && S_AXI_RREADY)
+			begin
+				// Read data is accepted by the master
+				axi_rvalid <= 1'b0;
+			end                
+		end
 	end    
 
 	// Implement memory mapped register select and read logic generation
@@ -382,116 +382,115 @@
 	assign slv_reg_rden = axi_arready & S_AXI_ARVALID & ~axi_rvalid;
 	always @(*)
 	begin
-	      // Address decoding for reading registers
-	      case ( axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
-	        2'h0   : reg_data_out <= control_reg;
-	        2'h1   : reg_data_out <= message_address;
-	        2'h2   : reg_data_out <= slv_reg2;
-	        2'h3   : reg_data_out <= slv_reg3;
-	        default : reg_data_out <= 0;
-	      endcase
+		// Address decoding for reading registers
+		case ( axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
+			2'h0   : reg_data_out <= control_reg;
+			2'h1   : reg_data_out <= send_message_address;
+			2'h2   : reg_data_out <= status_reg;
+			2'h3   : reg_data_out <= recv_message_address;
+			default : reg_data_out <= 0;
+		endcase
 	end
 
 	// Output register or memory read data
 	always @( posedge S_AXI_ACLK )
 	begin
-	  if ( S_AXI_ARESETN == 1'b0 )
-	    begin
-	      axi_rdata  <= 0;
-	    end 
-	  else
-	    begin    
-	      // When there is a valid read address (S_AXI_ARVALID) with 
-	      // acceptance of read address by the slave (axi_arready), 
-	      // output the read data 
-	      if (slv_reg_rden)
-	        begin
-	          axi_rdata <= reg_data_out;     // register read data
-	        end   
-	    end
+		if ( S_AXI_ARESETN == 1'b0 )
+		begin
+			axi_rdata  <= 0;
+		end 
+		else
+		begin    
+			// When there is a valid read address (S_AXI_ARVALID) with 
+			// acceptance of read address by the slave (axi_arready), 
+			// output the read data 
+			if (slv_reg_rden)
+			begin
+				axi_rdata <= reg_data_out;     // register read data
+			end   
+		end
 	end    
 
 	// Add user logic here
-	assign bram_clk_a=S_AXI_ACLK;
 	wire [7:0] flit_destination;
 	wire [7:0] flit_length;
 	assign flit_length=control_reg[15:8];
 	assign flit_destination=control_reg[23:16];
 	
 	/* 
-	 * State machine for flit sending
+	 * send_state machine for flit sending
 	 * */
 	
 	localparam STATE_IDLE=0;
 	localparam STATE_LOADADDRESS=1;
 	localparam STATE_SEND=2;
 	localparam STATE_FINISHED=3;
-	reg [1:0] state;
-	reg [1:0] next_state;
+	reg [1:0] send_state;
+	reg [1:0] send_next_state;
+	reg [1:0] recv_state;
+	reg [1:0] recv_next_state;
 	
 	
 	always @(posedge S_AXI_ACLK)
-		begin
-			if(~S_AXI_ARESETN)
-				state<=STATE_IDLE;
-			else 
-				state<=next_state;
-		end
+	begin
+		if(~S_AXI_ARESETN)
+			send_state<=STATE_IDLE;
+		else 
+			send_state<=send_next_state;
+	end
 		
 	always @(*)
-		case(state)
+		case(send_state)
 			STATE_IDLE:
 			begin
-				if(control_reg[0])
-					next_state<=STATE_LOADADDRESS;
+				if(control_reg[0] && (recv_state==STATE_IDLE)) /* wait until flit received */
+					send_next_state<=STATE_LOADADDRESS;
 				else
-					next_state<=STATE_IDLE;
-		    end
-		    STATE_LOADADDRESS:
-		    	next_state<=STATE_SEND;
+					send_next_state<=STATE_IDLE;
+			end
+			STATE_LOADADDRESS:
+				send_next_state<=STATE_SEND;
 			STATE_SEND:
 			begin
 				if(flit_sent==flit_length) /* TODO: CHECK */
-					next_state<=STATE_FINISHED;
+					send_next_state<=STATE_FINISHED;
 				else
-					next_state<=STATE_SEND;
+					send_next_state<=STATE_SEND;
 			end
 			STATE_FINISHED:
 			begin
 				if(~control_reg[0])
-					next_state<=STATE_IDLE;
+					send_next_state<=STATE_IDLE;
 				else
-					next_state<=STATE_FINISHED; //
+					send_next_state<=STATE_FINISHED;				//
 			end
 			default:
-				next_state<=STATE_IDLE;	
+				send_next_state<=STATE_IDLE;	
 		endcase
 		
-    /* 
-     * Address generation and flit byte counting
-     * */
+		/* 
+		 * Address generation and flit byte counting
+		 * */
 	reg [7:0] flit_sent;
-	assign bram_addr_a=message_address + {flit_sent,2'b0};
-	assign bram_en_a=(state==STATE_LOADADDRESS || state==STATE_SEND); /* when we send, we enable the RAM */
   
-    always @(posedge S_AXI_ACLK)
-		if(~S_AXI_ARESETN || (state==STATE_IDLE))
+	always @(posedge S_AXI_ACLK)
+		if(~S_AXI_ARESETN || (send_state==STATE_IDLE))
 			flit_sent<=0;
 		else
-		if((state==STATE_SEND || state==STATE_LOADADDRESS) && (| send_ports_getNonFullVCs)) // when we have a free virtual channel and we need to send: we update 
-				flit_sent<=flit_sent+1;
+		if((send_state==STATE_SEND || send_state==STATE_LOADADDRESS) && (| send_ports_getNonFullVCs)) // when we have a free virtual channel and we need to send: we update 
+			flit_sent<=flit_sent+1;
 	
 	
 	
-	/* 
-	 * Select virtual channel
-	 * */			
+		/* 
+			 * Select virtual channel
+			 * */			
 	wire flit_vc;
 	wire flit_valid;
 	wire flit_final;
 	
-	assign flit_valid=(state==STATE_SEND);
-	assign flit_final=(flit_sent==flit_length);
+	assign flit_valid=(send_state==STATE_SEND);
+	assign flit_final=flit_valid&&(flit_sent==flit_length);
 	assign flit_vc=send_ports_getNonFullVCs[0]?0:1; // VC[0] has priority. No data should arrive when every VC is full
 	/*
 	 * Send flit
@@ -500,17 +499,95 @@
 	localparam integer FLIT_DEST_BITS=4;
 	assign send_ports_putFlit_flit_in={ flit_valid, flit_final, flit_destination[FLIT_DEST_BITS-1:0], flit_vc, bram_rddata_a};
 	assign EN_send_ports_putFlit=(flit_valid && (| send_ports_getNonFullVCs));
-    assign bram_rst_a=~S_AXI_ARESETN;
-    assign bram_we_a=4'b0;
-	assign bram_wrdata_a=0;
 	always @(*)
 	begin
 		$display("Final: %d",flit_final);
 		$display("Valid: %d",flit_valid);
 	end
-	// User logic ends
+	
+	/* receive logic */
+	localparam STATE_WAITFLIT=1;
+	localparam STATE_RECEIVEFLIT=2;
+	wire mem_unlocked;
+	assign mem_unlocked=(send_state==STATE_IDLE)||(send_state==STATE_FINISHED);
+	always @(*)
+		case(recv_state)
+			STATE_IDLE:
+			begin
+				if(control_reg[1]&& mem_unlocked)
+					recv_next_state<=STATE_WAITFLIT;
+				else
+					recv_next_state<=STATE_IDLE;
+			end
+			STATE_WAITFLIT:
+			begin
+				if(recv_ports_getFlit[C_FLIT_WIDTH-1]==1) /* valid flit */
+					recv_next_state<=STATE_RECEIVEFLIT;
+				else
+					recv_next_state<=STATE_WAITFLIT;
+					
+			end
+			STATE_RECEIVEFLIT:
+			begin
+				$display("Receive flit %x",recv_ports_getFlit);
+				if(recv_ports_getFlit[C_FLIT_WIDTH-1]==0)
+					recv_next_state<=STATE_WAITFLIT;
+				else
+				if(recv_ports_getFlit[C_FLIT_WIDTH-2]==1) // tail
+					recv_next_state<=STATE_FINISHED;
+				else
+					recv_next_state<=STATE_RECEIVEFLIT;
+					
+			end
+			STATE_FINISHED:
+				if(~control_reg[1])
+					recv_next_state<=STATE_IDLE;
+				else
+					recv_next_state<=STATE_FINISHED;				//
+				
+			default:
+				recv_next_state<=STATE_IDLE;
+		endcase
+	
+	always @ (posedge S_AXI_ACLK) 
+		if(~S_AXI_ARESETN)
+			recv_state<=STATE_IDLE;
+		else 
+			recv_state<=recv_next_state;
 		
+	assign EN_recv_ports_getFlit=(recv_state==STATE_RECEIVEFLIT);
+	assign EN_recv_ports_putNonFullVCs=(recv_state==STATE_WAITFLIT || recv_state==STATE_RECEIVEFLIT);
+	assign recv_ports_putNonFullVCs_nonFullVCs={1'b1, 1'b1};
 
+
+
+	always @(posedge S_AXI_ACLK)
+		if(~S_AXI_ARESETN)
+			recv_state<=STATE_IDLE;
+		else 
+			recv_state<=recv_next_state;
+	reg [7:0] flit_recv;
+  
+	always @(posedge S_AXI_ACLK)
+		if(~S_AXI_ARESETN || (recv_state==STATE_IDLE))
+			flit_recv<=0;
+		else
+		if(recv_state==STATE_RECEIVEFLIT ) 
+			flit_recv<=flit_recv+1;
+	
+	
+		
+	wire [31:0] bram_send_addr;
+	wire [31:0] bram_recv_addr;
+	assign bram_send_addr=send_message_address + {flit_sent,2'b0};
+	assign bram_recv_addr=recv_message_address + {flit_recv,2'b0};
+	assign bram_clk_a=S_AXI_ACLK;
+	assign bram_addr_a=(send_state==STATE_LOADADDRESS || send_state==STATE_SEND)?bram_send_addr:bram_recv_addr;
+	assign bram_en_a=(send_state==STATE_LOADADDRESS || send_state==STATE_SEND)||(recv_state==STATE_RECEIVEFLIT); /* when we send, we enable the RAM */
+	assign bram_rst_a=~S_AXI_ARESETN;
+	assign bram_we_a= {4{recv_ports_getFlit[C_FLIT_WIDTH-1] & mem_unlocked}};
+	assign bram_wrdata_a=recv_ports_getFlit[31:0];
+	// User logic ends
     
 			
 	endmodule
