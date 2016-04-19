@@ -386,7 +386,7 @@ module connect_mailbox_v1_0_S00_AXI #
 		case ( axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
 			2'h0   : reg_data_out <= control_reg;
 			2'h1   : reg_data_out <= send_message_address;
-			2'h2   : reg_data_out <= status_reg;
+			2'h2   : reg_data_out <= {recv_state==STATE_FINISHED,send_state==STATE_FINISHED};
 			2'h3   : reg_data_out <= recv_message_address;
 			default : reg_data_out <= 0;
 		endcase
@@ -425,9 +425,9 @@ module connect_mailbox_v1_0_S00_AXI #
 	localparam STATE_LOADADDRESS=1;
 	localparam STATE_SEND=2;
 	localparam STATE_FINISHED=3;
-	reg [1:0] send_state;
+	(* mark_debug = "true" *) (* keep = "true" *) reg [1:0] send_state;
 	reg [1:0] send_next_state;
-	reg [1:0] recv_state;
+	(* mark_debug = "true" *) (* keep = "true" *) reg [1:0] recv_state;
 	reg [1:0] recv_next_state;
 	
 	
