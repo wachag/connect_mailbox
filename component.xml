@@ -289,12 +289,36 @@
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
+    <spirit:busInterface>
+      <spirit:name>s00_axi_intr</spirit:name>
+      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="interrupt" spirit:version="1.0"/>
+      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="interrupt_rtl" spirit:version="1.0"/>
+      <spirit:master/>
+      <spirit:portMaps>
+        <spirit:portMap>
+          <spirit:logicalPort>
+            <spirit:name>INTERRUPT</spirit:name>
+          </spirit:logicalPort>
+          <spirit:physicalPort>
+            <spirit:name>s00_axi_intr</spirit:name>
+          </spirit:physicalPort>
+        </spirit:portMap>
+      </spirit:portMaps>
+      <spirit:parameters>
+        <spirit:parameter>
+          <spirit:name>SENSITIVITY</spirit:name>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.S00_AXI_INTR.SENSITIVITY" spirit:choiceRef="choice_list_99a1d2b9">LEVEL_HIGH</spirit:value>
+        </spirit:parameter>
+      </spirit:parameters>
+    </spirit:busInterface>
   </spirit:busInterfaces>
   <spirit:memoryMaps>
     <spirit:memoryMap>
       <spirit:name>s00_axi</spirit:name>
       <spirit:addressBlock>
-        <spirit:name>regs</spirit:name>
+        <spirit:name>reg</spirit:name>
+        <spirit:displayName>reg</spirit:displayName>
+        <spirit:description>Register space</spirit:description>
         <spirit:baseAddress spirit:format="long">0</spirit:baseAddress>
         <spirit:range spirit:format="long">4096</spirit:range>
         <spirit:width spirit:format="long">0</spirit:width>
@@ -315,7 +339,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>09551d61</spirit:value>
+            <spirit:value>7c76d03a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -331,7 +355,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>09551d61</spirit:value>
+            <spirit:value>7c76d03a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -345,7 +369,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>6cea2f2e</spirit:value>
+            <spirit:value>d9c43be5</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -930,6 +954,19 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
+        <spirit:name>s00_axi_intr</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_verilogsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
         <spirit:name>s00_axi_rready</spirit:name>
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
@@ -970,6 +1007,13 @@
       <spirit:enumeration>32</spirit:enumeration>
     </spirit:choice>
     <spirit:choice>
+      <spirit:name>choice_list_99a1d2b9</spirit:name>
+      <spirit:enumeration>LEVEL_HIGH</spirit:enumeration>
+      <spirit:enumeration>LEVEL_LOW</spirit:enumeration>
+      <spirit:enumeration>EDGE_RISING</spirit:enumeration>
+      <spirit:enumeration>EDGE_FALLING</spirit:enumeration>
+    </spirit:choice>
+    <spirit:choice>
       <spirit:name>choice_list_9d8b0d81</spirit:name>
       <spirit:enumeration>ACTIVE_HIGH</spirit:enumeration>
       <spirit:enumeration>ACTIVE_LOW</spirit:enumeration>
@@ -985,7 +1029,7 @@
       <spirit:file>
         <spirit:name>hdl/connect_mailbox_v1_0.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_ebddcfe6</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_c0b3f156</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -1135,18 +1179,18 @@
       <xilinx:displayName>connect_mailbox_v1.0</xilinx:displayName>
       <xilinx:vendorDisplayName>BME MIT FPGA LAB</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://www.mit.bme.hu</xilinx:vendorURL>
-      <xilinx:coreRevision>7</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2016-04-12T11:09:45Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>13</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2016-05-05T13:26:46Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="fpgalab.mit.bme.hu:NoC:connect_mailbox:1.0_ARCHIVE_LOCATION">/home/wachag/Projects/phd/ip_repo/connect_mailbox_1.0</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2015.4</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="2cd2dbeb"/>
-      <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="8d501c3a"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="c32e6ac7"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="75c130d0"/>
+      <xilinx:xilinxVersion>2016.1</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="9df0a120"/>
+      <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="01f2794a"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="6d0ab58c"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="edf57329"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="c49c75bc"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="b4803348"/>
     </xilinx:packagingInfo>

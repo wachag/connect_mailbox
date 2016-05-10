@@ -61,6 +61,7 @@ module connect_mailbox_v1_0 #
 		output wire [C_S00_AXI_DATA_WIDTH-1 : 0] s00_axi_rdata,
 		output wire [1 : 0] s00_axi_rresp,
 		output wire  s00_axi_rvalid,
+		output wire s00_axi_intr,
 		input wire  s00_axi_rready
 		);
 	// Instantiation of Axi Bus Interface S00_AXI
@@ -90,6 +91,7 @@ module connect_mailbox_v1_0 #
 			.S_AXI_RRESP(s00_axi_rresp),
 			.S_AXI_RVALID(s00_axi_rvalid),
 			.S_AXI_RREADY(s00_axi_rready),
+			.S_AXI_INTR(s00_axi_intr),
 			.bram_addr_a(bram_addr_a),
 			.bram_clk_a(bram_clk_a),
 			.bram_wrdata_a(bram_wrdata_a),

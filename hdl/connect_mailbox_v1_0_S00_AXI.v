@@ -100,7 +100,8 @@ module connect_mailbox_v1_0_S00_AXI #
 		output wire  S_AXI_RVALID,
 		// Read ready. This signal indicates that the master can
 		// accept the read data and response information.
-		input wire  S_AXI_RREADY
+		input wire  S_AXI_RREADY,
+		(* mark_debug = "true" *) (* keep = "true" *)output wire S_AXI_INTR
 		);
 
 	// AXI4LITE signals
@@ -376,6 +377,16 @@ module connect_mailbox_v1_0_S00_AXI #
 		end
 	end    
 
+	(* mark_debug = "true" *) (* keep = "true" *) reg [7:0] flit_recv;
+	localparam STATE_IDLE=0;
+	localparam STATE_LOADADDRESS=1;
+	localparam STATE_SEND=2;
+	localparam STATE_FINISHED=3;
+	(* mark_debug = "true" *) (* keep = "true" *) reg [1:0] send_state;
+	reg [1:0] send_next_state;
+	(* mark_debug = "true" *) (* keep = "true" *) reg [1:0] recv_state;
+	reg [1:0] recv_next_state;
+	
 	// Implement memory mapped register select and read logic generation
 	// Slave register read enable is asserted when valid address is available
 	// and the slave is ready to accept the read address.
@@ -386,7 +397,7 @@ module connect_mailbox_v1_0_S00_AXI #
 		case ( axi_araddr[ADDR_LSB+OPT_MEM_ADDR_BITS:ADDR_LSB] )
 			2'h0   : reg_data_out <= control_reg;
 			2'h1   : reg_data_out <= send_message_address;
-			2'h2   : reg_data_out <= {recv_state==STATE_FINISHED,send_state==STATE_FINISHED};
+			2'h2   : reg_data_out <= {recv_ports_getFlit[C_FLIT_WIDTH-1:32],flit_recv,6'b0,(recv_state==STATE_FINISHED),(send_state==STATE_FINISHED)||(send_state==STATE_IDLE)};
 			2'h3   : reg_data_out <= recv_message_address;
 			default : reg_data_out <= 0;
 		endcase
@@ -421,14 +432,6 @@ module connect_mailbox_v1_0_S00_AXI #
 	 * send_state machine for flit sending
 	 * */
 	
-	localparam STATE_IDLE=0;
-	localparam STATE_LOADADDRESS=1;
-	localparam STATE_SEND=2;
-	localparam STATE_FINISHED=3;
-	(* mark_debug = "true" *) (* keep = "true" *) reg [1:0] send_state;
-	reg [1:0] send_next_state;
-	(* mark_debug = "true" *) (* keep = "true" *) reg [1:0] recv_state;
-	reg [1:0] recv_next_state;
 	
 	
 	always @(posedge S_AXI_ACLK)
@@ -471,7 +474,7 @@ module connect_mailbox_v1_0_S00_AXI #
 		/* 
 		 * Address generation and flit byte counting
 		 * */
-	reg [7:0] flit_sent;
+	(* mark_debug = "true" *) (* keep = "true" *)reg [7:0] flit_sent;
   
 	always @(posedge S_AXI_ACLK)
 		if(~S_AXI_ARESETN || (send_state==STATE_IDLE))
@@ -554,7 +557,6 @@ module connect_mailbox_v1_0_S00_AXI #
 			recv_state<=STATE_IDLE;
 		else 
 			recv_state<=recv_next_state;
-		
 	assign EN_recv_ports_getFlit=(recv_state==STATE_RECEIVEFLIT);
 	assign EN_recv_ports_putNonFullVCs=(recv_state==STATE_WAITFLIT || recv_state==STATE_RECEIVEFLIT);
 	assign recv_ports_putNonFullVCs_nonFullVCs={1'b1, 1'b1};
@@ -566,7 +568,6 @@ module connect_mailbox_v1_0_S00_AXI #
 			recv_state<=STATE_IDLE;
 		else 
 			recv_state<=recv_next_state;
-	reg [7:0] flit_recv;
   
 	always @(posedge S_AXI_ACLK)
 		if(~S_AXI_ARESETN || (recv_state==STATE_IDLE))
@@ -587,7 +588,8 @@ module connect_mailbox_v1_0_S00_AXI #
 	assign bram_rst_a=~S_AXI_ARESETN;
 	assign bram_we_a= {4{recv_ports_getFlit[C_FLIT_WIDTH-1] & mem_unlocked}};
 	assign bram_wrdata_a=recv_ports_getFlit[31:0];
-	// User logic ends
     
+    assign S_AXI_INTR=((recv_state==STATE_IDLE)||(recv_state==STATE_FINISHED))&& recv_ports_getFlit[C_FLIT_WIDTH-1] && control_reg[3];		
+	// User logic ends
 			
 	endmodule
